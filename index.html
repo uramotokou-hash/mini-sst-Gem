@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ミニSST場面提案くん</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 { color: #2c3e50; font-size: 1.5rem; }
+        .scene-box {
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            background-color: #ecf0f1;
+        }
+        .category { font-weight: bold; color: #3498db; font-size: 0.9rem; }
+        .situation { font-size: 1.2rem; margin: 10px 0; color: #333; }
+        .target { font-size: 0.9rem; color: #7f8c8d; font-style: italic; }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ミニSST場面提案</h1>
+    <div class="scene-box" id="scene-display">
+        <p>「場面を出す」ボタンを押してください</p>
+    </div>
+    <button onclick="generateScene()">場面を出す</button>
+</div>
+
+<script>
+    const scenes = [
+        { cat: "学校", sit: "休み時間に友達が楽しそうに話している時", target: "「まぜて」と言ってみる" },
+        { cat: "学校", sit: "授業中、消しゴムを忘れたことに気づいた時", target: "隣の人に丁寧に借りる" },
+        { cat: "家庭", sit: "ゲームをやめてご飯を食べるように言われた時", target: "「あと少し」の交渉か、区切りをつける" },
+        { cat: "公共", sit: "お店で会計の時、お釣りをもらい忘れた時", target: "店員さんに落ち着いて声をかける" },
+        { cat: "友人", sit: "遊ぶ約束をしていたが、急に行けなくなった時", target: "理由を話して謝り、別の日を提案する" },
+        { cat: "学校", sit: "廊下で先生とすれ違った時", target: "相手の目を見て挨拶する" },
+        { cat: "友人", sit: "貸していた本が汚れて返ってきた時", target: "怒らずに、自分の気持ちをIメッセージで伝える" }
+    ];
+
+    function generateScene() {
+        const randomIndex = Math.floor(Math.random() * scenes.length);
+        const scene = scenes[randomIndex];
+        
+        const display = document.getElementById('scene-display');
+        display.innerHTML = `
+            <div class="category">[${scene.cat}]</div>
+            <div class="situation">${scene.sit}</div>
+            <div class="target">ポイント：${scene.target}</div>
+        `;
+    }
+</script>
+
+</body>
+</html>
