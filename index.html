@@ -3,81 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>進化版！ミニSST場面提案</title>
+    <title>完全自動版！ミニSST提案くん</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #e3f2fd; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background-color: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 95%; }
-        h1 { color: #1565c0; font-size: 1.4rem; margin-top: 0; }
-        .scene-box { min-height: 350px; margin: 15px 0; padding: 20px; border: 3px solid #bbdefb; border-radius: 15px; background-color: #ffffff; }
-        .category { font-weight: bold; color: #1e88e5; background: #e3f2fd; display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem; }
-        .situation { font-size: 1.1rem; font-weight: bold; margin: 15px 0; color: #333; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; max-width: 450px; width: 90%; }
+        h1 { color: #333; font-size: 1.5rem; margin-bottom: 20px; }
+        .scene-box { min-height: 300px; padding: 20px; border: 2px solid #eee; border-radius: 20px; margin-bottom: 20px; background-color: #fff; }
+        .situation { font-weight: bold; font-size: 1.1rem; color: #444; margin-bottom: 15px; }
         
-        /* 吹き出しのスタイル */
-        .balloon { position: relative; display: inline-block; margin: 15px 0; padding: 15px; width: 80%; color: #333; font-size: 1.1rem; background: #f0f0f0; border-radius: 15px; border: 2px solid #333; }
-        .balloon:after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -15px; border: 15px solid transparent; border-top: 15px solid #f0f0f0; }
-        .balloon:before { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -17px; border: 17px solid transparent; border-top: 17px solid #333; z-index: -1; }
+        /* 吹き出し */
+        .balloon { background: #f0f0f0; border-radius: 15px; padding: 15px; position: relative; margin-bottom: 25px; border: 2px solid #333; font-weight: bold; }
+        .balloon::after { content: ''; position: absolute; bottom: -12px; left: 50%; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 12px solid #f0f0f0; margin-left: -10px; }
 
-        .illustration { width: 120px; height: 120px; margin: 10px auto; display: block; object-fit: contain; }
-        .target { font-size: 0.9rem; color: #d32f2f; font-weight: bold; border-top: 1px solid #eee; padding-top: 10px; margin-top: 15px; }
+        /* イラストエリア */
+        .illustration-area { height: 120px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+        svg { width: 100px; height: 100px; }
+
+        .target-box { background: #fff5f5; border-radius: 12px; padding: 10px; color: #d32f2f; font-weight: bold; visibility: hidden; margin-top: 10px; }
         
-        button { background-color: #1e88e5; color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 1.1rem; cursor: pointer; font-weight: bold; box-shadow: 0 4px #1565c0; }
-        button:active { box-shadow: none; transform: translateY(4px); }
+        .btn-main { background: #007bff; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%; font-weight: bold; }
+        .btn-main:hover { background: #0056b3; }
+        .btn-ans { background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-top: 15px; cursor: pointer; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>ミニSST場面提案くん Ver.2</h1>
-    <div class="scene-box" id="scene-display">
-        <p>「場面を出す」ボタンを押して練習を始めよう！</p>
+    <h1>ミニSST場面提案</h1>
+    <div class="scene-box" id="scene-content">
+        <p>「場面を出す」を押してスタート！</p>
     </div>
-    <button onclick="generateScene()">場面を出す</button>
+    <button class="btn-main" onclick="nextScene()">場面を出す</button>
+    <button class="btn-ans" id="ans-btn" style="display:none;" onclick="showAns()">答え・ヒントを見る</button>
 </div>
 
 <script>
     const scenes = [
-        { 
-            cat: "学校", 
-            sit: "友達に遊びに誘われたけれど、今は一人で本を読みたい時", 
-            voice: "「ねぇねぇ、一緒にサッカーしようよ！」",
-            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjS74087r065f3t6GZzB9Z0WfUfG_m7z7i-U8U1V7PZ0/s400/sports_soccer_boy.png",
-            target: "断る理由を言ってから「また今度ね」と伝える" 
+        {
+            sit: "友達がサッカーに誘ってくれた時",
+            voice: "「ねぇ、一緒にサッカーしようよ！」",
+            target: "やりたい時は「いいね！」、嫌な時は理由を添えて「また今度」と言う。",
+            // サッカーボールのイラスト（コード）
+            svg: '<circle cx="50" cy="50" r="40" fill="white" stroke="black" stroke-width="2"/><path d="M30 30 L50 20 L70 30 L75 50 L65 70 L45 75 L25 65 L20 45 Z" fill="none" stroke="black" stroke-width="2"/>'
         },
-        { 
-            cat: "家庭", 
-            sit: "お母さんが忙しそうに掃除をしている時", 
-            voice: "「あー忙しい！誰か手伝ってくれないかな…」",
-            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiu6vO_Z5UuH-N-qWvGz6_O-U-S_W_G/s400/souji_osouji_woman.png",
-            target: "「何か手伝おうか？」と声をかける" 
+        {
+            sit: "お母さんが荷物で手がふさがっている時",
+            voice: "「うう、重い…ドアを開けてほしいな」",
+            target: "「いいよ」と言って、先にドアを開けて待ってあげる。",
+            // 荷物のイラスト（コード）
+            svg: '<rect x="20" y="30" width="60" height="50" fill="#d2b48c" stroke="black" stroke-width="2"/><path d="M40 30 V10 M60 30 V10" stroke="black" stroke-width="2"/>'
         },
-        { 
-            cat: "公共", 
-            sit: "知らない人に「忘れ物ですよ」と言われた時", 
-            voice: "「もしもし、ハンカチ落としましたよ！」",
-            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjy_UuA1u5-T-L8/s400/bag_hand_woman.png",
-            target: "相手の目を見て「ありがとうございます」と言う" 
-        },
-        { 
-            cat: "友人", 
-            sit: "友達が新しい靴を履いていて、自慢げな時", 
-            voice: "「見て見て！この靴、最新モデルなんだよ！」",
-            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi0-S0B-x-L/s400/shoes_sneaker.png",
-            target: "「かっこいいね！」「似合ってるね」と褒める" 
+        {
+            sit: "お店でお釣りを多くもらいすぎた時",
+            voice: "（あれ、お釣りが多いみたい…？）",
+            target: "「お釣りが多いですよ」と正直に店員さんに伝える。",
+            // お金のイラスト（コード）
+            svg: '<circle cx="50" cy="50" r="40" fill="#ffd700" stroke="#b8860b" stroke-width="2"/><text x="50" y="65" font-size="40" text-anchor="middle" font-weight="bold">¥</text>'
         }
     ];
 
-    function generateScene() {
-        const randomIndex = Math.floor(Math.random() * scenes.length);
-        const scene = scenes[randomIndex];
-        
-        const display = document.getElementById('scene-display');
-        display.innerHTML = `
-            <div class="category">${scene.cat}</div>
-            <div class="situation">${scene.sit}</div>
-            <div class="balloon">${scene.voice}</div>
-            <img src="${scene.img}" class="illustration" alt="場面イラスト">
-            <div class="target">【目標】${scene.target}</div>
+    function nextScene() {
+        const s = scenes[Math.floor(Math.random() * scenes.length)];
+        const content = document.getElementById('scene-content');
+        content.innerHTML = `
+            <div class="situation">${s.sit}</div>
+            <div class="balloon">${s.voice}</div>
+            <div class="illustration-area"><svg viewBox="0 0 100 100">${s.svg}</svg></div>
+            <div id="target" class="target-box">${s.target}</div>
         `;
+        document.getElementById('ans-btn').style.display = 'inline-block';
+    }
+
+    function showAns() {
+        document.getElementById('target').style.visibility = 'visible';
     }
 </script>
 
