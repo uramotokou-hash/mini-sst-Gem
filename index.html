@@ -3,73 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ミニSST場面提案くん</title>
+    <title>進化版！ミニSST場面提案</title>
     <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        h1 { color: #2c3e50; font-size: 1.5rem; }
-        .scene-box {
-            min-height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin: 20px 0;
-            padding: 15px;
-            border: 2px dashed #3498db;
-            border-radius: 10px;
-            background-color: #ecf0f1;
-        }
-        .category { font-weight: bold; color: #3498db; font-size: 0.9rem; }
-        .situation { font-size: 1.2rem; margin: 10px 0; color: #333; }
-        .target { font-size: 0.9rem; color: #7f8c8d; font-style: italic; }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover { background-color: #2980b9; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #e3f2fd; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background-color: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 95%; }
+        h1 { color: #1565c0; font-size: 1.4rem; margin-top: 0; }
+        .scene-box { min-height: 350px; margin: 15px 0; padding: 20px; border: 3px solid #bbdefb; border-radius: 15px; background-color: #ffffff; }
+        .category { font-weight: bold; color: #1e88e5; background: #e3f2fd; display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem; }
+        .situation { font-size: 1.1rem; font-weight: bold; margin: 15px 0; color: #333; }
+        
+        /* 吹き出しのスタイル */
+        .balloon { position: relative; display: inline-block; margin: 15px 0; padding: 15px; width: 80%; color: #333; font-size: 1.1rem; background: #f0f0f0; border-radius: 15px; border: 2px solid #333; }
+        .balloon:after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -15px; border: 15px solid transparent; border-top: 15px solid #f0f0f0; }
+        .balloon:before { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -17px; border: 17px solid transparent; border-top: 17px solid #333; z-index: -1; }
+
+        .illustration { width: 120px; height: 120px; margin: 10px auto; display: block; object-fit: contain; }
+        .target { font-size: 0.9rem; color: #d32f2f; font-weight: bold; border-top: 1px solid #eee; padding-top: 10px; margin-top: 15px; }
+        
+        button { background-color: #1e88e5; color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 1.1rem; cursor: pointer; font-weight: bold; box-shadow: 0 4px #1565c0; }
+        button:active { box-shadow: none; transform: translateY(4px); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>ミニSST場面提案</h1>
+    <h1>ミニSST場面提案くん Ver.2</h1>
     <div class="scene-box" id="scene-display">
-        <p>「場面を出す」ボタンを押してください</p>
+        <p>「場面を出す」ボタンを押して練習を始めよう！</p>
     </div>
     <button onclick="generateScene()">場面を出す</button>
 </div>
 
 <script>
     const scenes = [
-        { cat: "学校", sit: "休み時間に友達が楽しそうに話している時", target: "「まぜて」と言ってみる" },
-        { cat: "学校", sit: "授業中、消しゴムを忘れたことに気づいた時", target: "隣の人に丁寧に借りる" },
-        { cat: "家庭", sit: "ゲームをやめてご飯を食べるように言われた時", target: "「あと少し」の交渉か、区切りをつける" },
-        { cat: "公共", sit: "お店で会計の時、お釣りをもらい忘れた時", target: "店員さんに落ち着いて声をかける" },
-        { cat: "友人", sit: "遊ぶ約束をしていたが、急に行けなくなった時", target: "理由を話して謝り、別の日を提案する" },
-        { cat: "学校", sit: "廊下で先生とすれ違った時", target: "相手の目を見て挨拶する" },
-        { cat: "友人", sit: "貸していた本が汚れて返ってきた時", target: "怒らずに、自分の気持ちをIメッセージで伝える" }
+        { 
+            cat: "学校", 
+            sit: "友達に遊びに誘われたけれど、今は一人で本を読みたい時", 
+            voice: "「ねぇねぇ、一緒にサッカーしようよ！」",
+            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjS74087r065f3t6GZzB9Z0WfUfG_m7z7i-U8U1V7PZ0/s400/sports_soccer_boy.png",
+            target: "断る理由を言ってから「また今度ね」と伝える" 
+        },
+        { 
+            cat: "家庭", 
+            sit: "お母さんが忙しそうに掃除をしている時", 
+            voice: "「あー忙しい！誰か手伝ってくれないかな…」",
+            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiu6vO_Z5UuH-N-qWvGz6_O-U-S_W_G/s400/souji_osouji_woman.png",
+            target: "「何か手伝おうか？」と声をかける" 
+        },
+        { 
+            cat: "公共", 
+            sit: "知らない人に「忘れ物ですよ」と言われた時", 
+            voice: "「もしもし、ハンカチ落としましたよ！」",
+            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjy_UuA1u5-T-L8/s400/bag_hand_woman.png",
+            target: "相手の目を見て「ありがとうございます」と言う" 
+        },
+        { 
+            cat: "友人", 
+            sit: "友達が新しい靴を履いていて、自慢げな時", 
+            voice: "「見て見て！この靴、最新モデルなんだよ！」",
+            img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi0-S0B-x-L/s400/shoes_sneaker.png",
+            target: "「かっこいいね！」「似合ってるね」と褒める" 
+        }
     ];
 
     function generateScene() {
@@ -78,9 +72,11 @@
         
         const display = document.getElementById('scene-display');
         display.innerHTML = `
-            <div class="category">[${scene.cat}]</div>
+            <div class="category">${scene.cat}</div>
             <div class="situation">${scene.sit}</div>
-            <div class="target">ポイント：${scene.target}</div>
+            <div class="balloon">${scene.voice}</div>
+            <img src="${scene.img}" class="illustration" alt="場面イラスト">
+            <div class="target">【目標】${scene.target}</div>
         `;
     }
 </script>
